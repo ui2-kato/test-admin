@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+// Initialize the dataProvider before rendering react-admin resources.
+import React, { useState, useEffect } from 'react';
+import buildHasuraProvider from 'ra-data-hasura';
+import { Admin, Resource, EditGuesser } from 'react-admin';
 
-function App() {
+import { UserList, UserEdit } from "./users";
+
+const App = () => {
+  const [dataProvider, setDataProvider] = useState(null);
+
+  useEffect(() => {
+    const buildDataProvider = async () => {
+      const dataProvider = await buildHasuraProvider({
+        clientOptions: { uri: 'http://localhost:8080/v1/graphql' },
+      });
+      setDataProvider(() => dataProvider);
+    };
+    buildDataProvider();
+  }, []);
+
+  if (!dataProvider) return <p>Loading...</p>;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Admin dataProvider={dataProvider}>
+      <Resource
+        name="users"
+        list={UserList}
+        edit={UserEdit}
+      />
+    </Admin>
   );
-}
+};
 
 export default App;
