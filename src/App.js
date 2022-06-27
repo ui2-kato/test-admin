@@ -11,7 +11,7 @@ const App = () => {
   useEffect(() => {
     const buildDataProvider = async () => {
       const dataProvider = await buildHasuraProvider({
-        clientOptions: { uri: 'http://localhost:8080/v1/graphql' },
+        clientOptions: { uri: 'http://ec2-52-68-50-55.ap-northeast-1.compute.amazonaws.com:8080/v1/graphql' },
       });
       setDataProvider(() => dataProvider);
     };
